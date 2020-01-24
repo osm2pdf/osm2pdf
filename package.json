@@ -5,7 +5,7 @@
   "author": "mrkvon <mrkvon@protonmail.com> (https://mrkvon.org)",
   "repository": {
     "type": "git",
-    "url": "git+https://git.mrkvon.org/mrkvon/osm2pdf.git"
+    "url": "https://git.mrkvon.org/mrkvon/osm2pdf.git"
   },
   "homepage": "https://git.mrkvon.org/mrkvon/osm2pdf",
   "main": "lib/index.js",
