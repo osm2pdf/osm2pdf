@@ -26,7 +26,8 @@ import help from './help';
   const zoom = Number(argv.zoom || 12);
 
   if (zoom >= 17) {
-    const SORRY = 'Sorry, OSM Tile Usage Policy (https://operations.osmfoundation.org/policies/tiles/) forbids downloading tiles with zoom 17 and higher.';
+    const SORRY =
+      'Sorry, OSM Tile Usage Policy (https://operations.osmfoundation.org/policies/tiles/) forbids downloading tiles with zoom 17 and higher.';
     console.log(SORRY); // tslint:disable-line:no-console
     return;
   }
