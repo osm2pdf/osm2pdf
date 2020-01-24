@@ -4,7 +4,7 @@ Generate pdf with [OpenStreetMap](https://openstreetmap.org) tiles.
 
 ## Video
 
-[![How to download OpenStreetMap with osm2pdf](https://img.youtube.com/vi/dWjHL-pSyUA/0.jpg)](https://www.youtube.com/watch?v=dWjHL-pSyUA)
+[![How to download OpenStreetMap with osm2pdf](https://img.youtube.com/vi/DiPj8yaXapA/0.jpg)](https://youtu.be/DiPj8yaXapA)
 
 ## Install
 
