@@ -1,2 +1,7 @@
 node_modules
 /lib
+*.pdf
+*.xml
+*.gpx
+yarn-error.log
+/tmp*
