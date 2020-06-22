@@ -12,6 +12,7 @@
 import minimist from 'minimist';
 import map from './map';
 import route from './route';
+import path from './path';
 import help from './help';
 
 (async () => {
@@ -35,7 +36,13 @@ import help from './help';
   const sy = Number(argv.sy || 5);
   const output = argv.output;
 
-  if (argv.route) {
+  if (argv.path) {
+    const input = argv.input;
+
+    if (!input) return help();
+
+    await path({ zoom, input }, { sx, sy }, output || 'path');
+  } else if (argv.route) {
     const input = argv.input;
 
     if (!input) return help();

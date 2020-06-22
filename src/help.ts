@@ -9,11 +9,13 @@ Options:
 --route                   (optional) download the route
                           you can download the GPX route file from https://graphhopper.com/maps/
                           find the desired route and click "GPX export" (gpx button)
+--path                    (optional) download the route and draw the path on it
+                          similar to --route option
 --input <path/to/gpx>     (with --route option) path to GPX route file
--n, --north <latitude>
--w, --west <longitude>
--s, --south <latitude>
--e, --east <longitude>    latitude or longitude of the desired map boundary (only when --route is not specified)
+-n <latitude>   north
+-w <longitude>  west
+-s <latitude>   south
+-e <longitude>  east      latitude or longitude of the desired map boundary (only when --route is not specified)
                           downloads a map within a defined square
 --zoom <level>            (optional) map zoom (number); defaults to 12; must be < 17
 --sx <integer>            (optional) amount of tiles per page horizontally; defaults to 4
@@ -23,10 +25,14 @@ Options:
 Examples:
 1. Provide map boundaries
 
-  osm2pdf --zoom=10 --north=15.1 --south=14.9 --east=13.9 --west=13.7
+  osm2pdf --zoom=10 -n=15.1 -s=14.9 -e=13.9 -w=13.7
 
 2. Provide a route in GPX format (can be exported at https://graphhopper.com/maps/)
   
+  osm2pdf --path --zoom=15 --input=path/to/some_route.gpx --output=my-route
+
+  OR (route without highlighted path)
+
   osm2pdf --route --zoom=15 --input=path/to/some_route.gpx --output=my-route
 `;
 

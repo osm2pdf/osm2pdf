@@ -2,15 +2,23 @@
  * copied from https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#ECMAScript_.28JavaScript.2FActionScript.2C_etc..29
  */
 
+export function lon2tileExact(lon: number, zoom: number): number {
+  return ((lon + 180) / 360) * Math.pow(2, zoom);
+}
+
+export function lat2tileExact(lat: number, zoom: number): number {
+  return (
+    ((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2) *
+    Math.pow(2, zoom)
+  );
+}
+
 export function lon2tile(lon: number, zoom: number): number {
-  return Math.floor(((lon + 180) / 360) * Math.pow(2, zoom));
+  return Math.floor(lon2tileExact(lon, zoom));
 }
 
 export function lat2tile(lat: number, zoom: number) {
-  return Math.floor(
-    ((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2) *
-      Math.pow(2, zoom),
-  );
+  return Math.floor(lat2tileExact(lat, zoom));
 }
 
 /**

@@ -20,7 +20,7 @@ export default async function route(
   await pages2pdf(pages, output);
 }
 
-interface Coordinate {
+export interface Coordinate {
   lat: number;
   lon: number;
 }
@@ -42,7 +42,7 @@ interface Route {
   };
 }
 
-async function parseRoute(file: string): Promise<Coordinate[]> {
+export async function parseRoute(file: string): Promise<Coordinate[]> {
   const xml = (await fs.readFile(file)).toString();
   const raw = (await parseString(xml)) as Route;
   return raw.gpx.trk[0].trkseg[0].trkpt.map(({ $: { lat, lon } }) => ({ lat: +lat, lon: +lon }));

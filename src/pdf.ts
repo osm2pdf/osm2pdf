@@ -46,7 +46,13 @@ async function mergeTiles(tiles: Buffer[][]): Promise<any> {
   return await mergeImg(row);
 }
 
-async function createPdf(name: string, tmp: string) {
+export async function savePage(page: Page, output: string): Promise<void> {
+  const pageTiles = await getPage(page);
+  const image = await mergeTiles(pageTiles);
+  await new Promise(resolve => image.write(output, resolve));
+}
+
+export async function createPdf(name: string, tmp: string) {
   await new Promise((resolve, reject) => {
     gm(`${tmp}/*.png`).write(`${name}.pdf`, err => {
       if (!err) return resolve();
@@ -55,7 +61,7 @@ async function createPdf(name: string, tmp: string) {
   });
 }
 
-async function clearTemporary(tmp: string) {
+export async function clearTemporary(tmp: string) {
   await fs.remove(tmp);
 }
 
