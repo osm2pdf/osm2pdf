@@ -2,7 +2,7 @@
 
 Generate pdf with [OpenStreetMap](https://openstreetmap.org) tiles.
 
-![example output of osm2pdf with --path parameter](example.png)
+![example output of osm2pdf with --path parameter](https://git.mrkvon.org/mrkvon/osm2pdf/raw/branch/master/example.png)
 
 ## Video
 
