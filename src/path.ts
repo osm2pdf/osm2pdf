@@ -147,7 +147,7 @@ async function drawPath(page: Page, drawablePath: DrawablePath, distanceStep: nu
       control
         .stroke('none')
         .fill('black')
-        .font(nodePath.resolve('src/fonts/OpenSans/OpenSans-Bold.ttf'), 12);
+        .font(nodePath.resolve('fonts/OpenSans/OpenSans-Bold.ttf'), 12);
 
       let nextDistance = 0;
       // tslint:disable-next-line:no-shadowed-variable
