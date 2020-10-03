@@ -11,7 +11,9 @@ Options:
                           find the desired route and click "GPX export" (gpx button)
 --path                    (optional) download the route and draw the path on it
                           similar to --route option
---input <path/to/gpx>     (with --route option) path to GPX route file
+--distance                (optional with --path option) write labels with distance in kilometres to path points
+--distance-step           (optional with --distance option) distance between distance labels (kilometres); defaults to 10
+--input <path/to/gpx>     (with --route or --path option) path to GPX route file
 -n <latitude>   north
 -w <longitude>  west
 -s <latitude>   south
@@ -29,7 +31,7 @@ Examples:
 
 2. Provide a route in GPX format (can be exported at https://graphhopper.com/maps/)
   
-  osm2pdf --path --zoom=15 --input=path/to/some_route.gpx --output=my-route
+  osm2pdf --path --zoom=15 --input=path/to/some_route.gpx --output=my-route --distance --distance-step=5
 
   OR (route without highlighted path)
 

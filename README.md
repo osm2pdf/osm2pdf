@@ -30,7 +30,7 @@ osm2pdf --route --zoom=10 --input=path/to/route.gpx --output=path/to/output
 or if you want to also draw the path on the map
 
 ```bash
-osm2pdf --path --zoom=10 --input=path/to/route.gpx --output=path/to/output
+osm2pdf --path --zoom=10 --input=path/to/route.gpx --output=path/to/output --distance --distance-step=20
 ```
 ### Download a map
 

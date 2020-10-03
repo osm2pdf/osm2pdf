@@ -23,7 +23,7 @@ import help from './help';
     return;
   }
 
-  const zoom = Number(argv.zoom || 12);
+  const zoom = argv.zoom ?? 12;
 
   if (zoom >= 17) {
     const SORRY =
@@ -32,16 +32,18 @@ import help from './help';
     return;
   }
 
-  const sx = Number(argv.sx || 4);
-  const sy = Number(argv.sy || 5);
+  const sx = argv.sx ?? 4;
+  const sy = argv.sy ?? 5;
   const output = argv.output;
 
   if (argv.path) {
     const input = argv.input;
 
+    const distanceStep = argv.distance ? argv['distance-step'] ?? 10 : -1;
+
     if (!input) return help();
 
-    await path({ zoom, input }, { sx, sy }, output || 'path');
+    await path({ zoom, input }, { sx, sy }, distanceStep, output || 'path');
   } else if (argv.route) {
     const input = argv.input;
 
@@ -49,12 +51,13 @@ import help from './help';
 
     await route({ zoom, input }, { sx, sy }, output || 'route');
   } else {
-    if (!argv.n || !argv.s || !argv.w || !argv.e) return help();
+    const north = argv.n ?? argv.north;
+    const west = argv.w ?? argv.west;
+    const south = argv.s ?? argv.south;
+    const east = argv.e ?? argv.east;
 
-    const north = Number(argv.n || argv.north);
-    const west = Number(argv.w || argv.west);
-    const south = Number(argv.s || argv.south);
-    const east = Number(argv.e || argv.east);
+    if (typeof north !== 'number' || typeof south !== 'number' || typeof east !== 'number' || typeof west !== 'number')
+      return help();
 
     await map(
       { zoom, north, west, south, east },
