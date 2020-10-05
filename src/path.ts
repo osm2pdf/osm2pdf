@@ -206,16 +206,20 @@ function getTileRouteWithDistance(route: Coordinate[], zoom: number): Path {
 
   for (let i = 0, len = route.length; i < len; ++i) {
     if (i > 0) {
-      distance += haversine(
-        {
-          latitude: route[i].lat,
-          longitude: route[i].lon,
-        },
-        {
-          latitude: route[i - 1].lat,
-          longitude: route[i - 1].lon,
-        },
-      );
+      distance +=
+        (haversine(
+          {
+            latitude: route[i].lat,
+            longitude: route[i].lon,
+          },
+          {
+            latitude: route[i - 1].lat,
+            longitude: route[i - 1].lon,
+          },
+        ) **
+          2 +
+          (route[i].ele / 1000 - route[i - 1].ele / 1000) ** 2) **
+        0.5;
     }
     output.push({
       x: lon2tileExact(route[i].lon, zoom),

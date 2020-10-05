@@ -23,6 +23,7 @@ export default async function route(
 export interface Coordinate {
   lat: number;
   lon: number;
+  ele: number;
 }
 
 interface StringCoordinate {
@@ -36,6 +37,7 @@ interface Route {
       trkseg: {
         trkpt: {
           $: StringCoordinate;
+          ele: string[];
         }[];
       }[];
     }[];
@@ -45,7 +47,7 @@ interface Route {
 export async function parseRoute(file: string): Promise<Coordinate[]> {
   const xml = (await fs.readFile(file)).toString();
   const raw = (await parseString(xml)) as Route;
-  return raw.gpx.trk[0].trkseg[0].trkpt.map(({ $: { lat, lon } }) => ({ lat: +lat, lon: +lon }));
+  return raw.gpx.trk[0].trkseg[0].trkpt.map(({ $: { lat, lon }, ele: [ele] }) => ({ lat: +lat, lon: +lon, ele: +ele }));
 }
 
 // tslint:disable-next-line:no-shadowed-variable
