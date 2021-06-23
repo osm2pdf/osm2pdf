@@ -1,29 +1,66 @@
 import { lat2tile, lon2tile, getTileSize } from './osm';
-import { pages2pdf, Page, PageSize } from './pdf';
-
-interface Boundaries {
-  north: number;
-  south: number;
-  east: number;
-  west: number;
-  zoom: number;
-}
+import { TileServer, Page } from './types';
+import { createPdf } from './pdf';
+import { downloadPages } from './download';
+import { clearTmp } from './utils';
 
 // main executable function
-export default async function map(boundaries: Boundaries, pageSize: PageSize, output: string) {
-  const pages: Page[] = boundaries2pages(boundaries, pageSize);
-
-  await pages2pdf(pages, output);
+export default async function map({
+  zoom,
+  output,
+  pageSizeX,
+  pageSizeY,
+  north,
+  west,
+  south,
+  east,
+  tileServer,
+}: {
+  zoom: number;
+  output: string;
+  pageSizeX: number;
+  pageSizeY: number;
+  north: number;
+  west: number;
+  south: number;
+  east: number;
+  tileServer: TileServer;
+}) {
+  // collect pages
+  const pages: Page[] = boundaries2pages({ north, west, south, east, pageSizeX, pageSizeY, zoom });
+  // download pages
+  const tmp = `tmp${Date.now()}`;
+  await downloadPages(pages, tmp, tileServer);
+  // create pdf
+  await createPdf(output, tmp);
+  // clean up downloaded pages
+  await clearTmp(tmp);
 }
 
-function boundaries2pages({ north, west, south, east, zoom }: Boundaries, { sx, sy }: PageSize) {
+function boundaries2pages({
+  north,
+  west,
+  south,
+  east,
+  pageSizeX,
+  pageSizeY,
+  zoom,
+}: {
+  north: number;
+  west: number;
+  south: number;
+  east: number;
+  pageSizeX: number;
+  pageSizeY: number;
+  zoom: number;
+}) {
   const x = lon2tile(west, zoom);
   const y = lat2tile(north, zoom);
 
   const { width, height } = getTileSize({ north, west, south, east, zoom });
 
-  const pagesX = Math.ceil(width / sx);
-  const pagesY = Math.ceil(height / sy);
+  const pagesX = Math.ceil(width / pageSizeX);
+  const pagesY = Math.ceil(height / pageSizeY);
 
   console.log('size', pagesX, 'x', pagesY, 'pages'); // tslint:disable-line:no-console
 
@@ -32,10 +69,10 @@ function boundaries2pages({ north, west, south, east, zoom }: Boundaries, { sx, 
   for (let py = 0; py < pagesY; py++) {
     for (let px = 0; px < pagesX; px++) {
       pages.push({
-        x: x + px * sx,
-        y: y + py * sy,
-        sx,
-        sy,
+        x: x + px * pageSizeX,
+        y: y + py * pageSizeY,
+        sx: pageSizeX,
+        sy: pageSizeY,
         zoom,
       });
     }
