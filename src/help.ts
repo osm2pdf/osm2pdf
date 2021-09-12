@@ -4,38 +4,73 @@ Export OpenStreetMap to pdf
 Usage:
 osm2pdf [options]
 
+=== Generic options (for Route and Area methods) ===
+
+--zoom          map zoom (default 12)
+--tile-server   url or number of the tile server (see also \`osm2pdf --list-tile-servers\`)
+                  find more tile servers at https://wiki.openstreetmap.org/wiki/Tile_servers
+                  please respect tile usage policies. download responsibly.
+--rate-limit    how many tiles per second can be downloaded (default 10)
+--output        name of the generated pdf file (".pdf" will be attached, existing files will be overwritten)
+-x              tiles per page horizontally (default 4)
+-y              tiles per page vertically (default 5)
+
+
+=== Methods ===
+
+=== Route ===
+
+Download route, given route coordinates in GPX format
+
 Options:
--h, --help                print this page
---route                   (optional) download the route
-                          you can download the GPX route file from https://graphhopper.com/maps/
-                          find the desired route and click "GPX export" (gpx button)
---path                    (optional) download the route and draw the path on it
-                          similar to --route option
---distance                (optional with --path option) write labels with distance in kilometres to path points
---distance-step           (optional with --distance option) distance between distance labels (kilometres); defaults to 10
---input <path/to/gpx>     (with --route or --path option) path to GPX route file
--n <latitude>   north
--w <longitude>  west
--s <latitude>   south
--e <longitude>  east      latitude or longitude of the desired map boundary (only when --route is not specified)
-                          downloads a map within a defined square
---zoom <level>            (optional) map zoom (number); defaults to 12; must be < 17
---sx <integer>            (optional) amount of tiles per page horizontally; defaults to 4
---sy <integer>            (optional) amount of tiles per page vertically; defaults to 5
---output <path/to/output> (optional) the desired name of the exported pdf file
+--route         execute Route method (required)
+--input         path to GPX route file (required)
+                  you can download the GPX route file e.g. from https://graphhopper.com/maps/
+                  find the desired route and click "GPX export" (gpx button)
+--no-path       don't draw path (optional)
+--no-distance   don't write labels with kilometers at the path (optional)
+--distance-step distance between distance labels (default 10 [kilometers])
 
 Examples:
-1. Provide map boundaries
+osm2pdf --route --input=path/to/some-route.gpx --output some-route-12 --zoom=12 --tile-server=2
+osm2pdf --route --input=path/to/other-route.gpx --output other-route-13 --zoom=13 --distance-step=5 --tile-server="http://{a|b}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" --rate-limit=2
 
-  osm2pdf --zoom=10 -n=15.1 -s=14.9 -e=13.9 -w=13.7
 
-2. Provide a route in GPX format (can be exported at https://graphhopper.com/maps/)
-  
-  osm2pdf --path --zoom=15 --input=path/to/some_route.gpx --output=my-route --distance --distance-step=5
+=== Area ===
 
-  OR (route without highlighted path)
+Download rectangular area, given GPS boundaries
 
-  osm2pdf --route --zoom=15 --input=path/to/some_route.gpx --output=my-route
+Options:
+--map           execute Area method (required)
+-n              latitude of the north boundary (required)
+-s              latitude of the south boundary (required)
+-e              longitude of the east boundary (required)
+-w              longitude of the west boundary (required)
+
+Example:
+osm2pdf --map -n=50.1 -s=50 -w=14.9 -e=15 --output=some-name-15 --tile-server=3 --zoom=15
+
+
+=== List Tile Servers ===
+
+Print a list of some recommended tile servers to choose from
+
+Options:
+--list-tile-servers   (required)
+
+Example:
+osm2pdf --list-tile-servers
+
+
+=== Help ===
+
+Print help
+
+Options:
+-h, --help                print this page (required)
+
+Example:
+osm2pdf --help
 `;
 
 export default function help(): void {

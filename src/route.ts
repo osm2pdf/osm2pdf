@@ -66,7 +66,7 @@ export default async function path({
   if (draw) {
     for (let i = 0, len = pages.length; i < len; ++i) {
       // draw paths
-      log(`${i + 1}/${pages.length} drawing`);
+      log(`drawing page ${i + 1}/${pages.length}`);
       const page = pages[i];
       await drawPath(page, drawablePath, distance ? distanceStep : -1, getFilename(tmp, i));
     }

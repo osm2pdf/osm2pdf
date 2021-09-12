@@ -11,8 +11,8 @@ export async function downloadPages(pages: Page[], tmp: string, tileServer: Tile
   const http = getHttp(tileServer.rateLimit);
   for (let i = 0, len = pages.length; i < len; i++) {
     const page = pages[i];
-    log('page', `${i + 1}/${pages.length}`);
-    const pageTiles = await getPage(page, { http, tileServer });
+    const info = `downloading page ${i + 1}/${pages.length}`;
+    const pageTiles = await getPage(page, { http, tileServer }, info);
     await savePage(pageTiles, getFilename(tmp, i));
   }
 }
@@ -38,12 +38,20 @@ async function getTile(
 async function getPage(
   { x, y, sx, sy, zoom }: Page,
   { http, tileServer }: { http: any; tileServer: TileServer },
+  info: string,
 ): Promise<Buffer[][]> {
+  let progress = 0;
+  log(info, `[${'.'.repeat(progress)}${' '.repeat(sx * sy - progress)}]`);
   const rows: Promise<Buffer[]>[] = [];
   for (let i = 0; i < sx; i++) {
     const row: Promise<Buffer>[] = [];
     for (let j = 0; j < sy; j++) {
-      row.push(getTile({ x: x + i, y: y + j, zoom }, { http, tileServer }));
+      row.push(
+        getTile({ x: x + i, y: y + j, zoom }, { http, tileServer }).then(tile => {
+          log(info, `[${'.'.repeat(++progress)}${' '.repeat(sx * sy - progress)}]`);
+          return tile;
+        }),
+      );
     }
     rows.push(Promise.all(row));
   }

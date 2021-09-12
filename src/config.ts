@@ -1,7 +1,7 @@
 import minimist from 'minimist';
 import { TileServer } from './types';
+import { servers, parseUrl } from './tile-servers';
 // TODO json-schema validation of input
-//
 
 // Generic options
 type Mode = 'help' | 'map' | 'route' | 'tiles';
@@ -56,55 +56,71 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
     return tilesConfig;
   }
 
-  const zoom = argv.zoom ?? 12;
-  const pageSizeX = argv.x ?? 4;
-  const pageSizeY = argv.y ?? 5;
-  const tileServer = getTileServer(argv['tile-server'], argv['rate-limit']);
+  if (argv.route || argv.map) {
+    const zoom = argv.zoom ?? 12;
+    const pageSizeX = argv.x ?? 4;
+    const pageSizeY = argv.y ?? 5;
+    const tileServer = getTileServer(argv['tile-server'], argv['rate-limit']);
 
-  const baseConfig = { zoom, pageSizeX, pageSizeY, tileServer };
+    const baseConfig = { zoom, pageSizeX, pageSizeY, tileServer };
 
-  if (argv.route) {
-    const input = argv.input;
-    if (!input) return helpConfig;
+    if (argv.route) {
+      const input = argv.input;
+      if (!input) return helpConfig;
 
-    return {
-      ...baseConfig,
-      mode: 'route',
-      input,
-      draw: argv.path ?? true,
-      distance: !!argv.distance,
-      distanceStep: argv['distance-step'] ?? 10,
-      output: argv.output || 'route',
-    };
-  }
+      return {
+        ...baseConfig,
+        mode: 'route',
+        input,
+        draw: !!(argv.path ?? true),
+        distance: !!(argv.distance ?? true),
+        distanceStep: argv['distance-step'] ?? 10,
+        output:
+          argv.output ||
+          `route-${input
+            .split('.')
+            .slice(0, -1)
+            .join('.')}-${zoom}`,
+      };
+    }
 
-  if (argv.map) {
-    const north: number = argv.n;
-    const west: number = argv.w;
-    const south: number = argv.s;
-    const east: number = argv.e;
+    if (argv.map) {
+      const north: number = argv.n;
+      const west: number = argv.w;
+      const south: number = argv.s;
+      const east: number = argv.e;
 
-    if (typeof north !== 'number' || typeof south !== 'number' || typeof east !== 'number' || typeof west !== 'number')
-      return helpConfig;
+      if (
+        typeof north !== 'number' ||
+        typeof south !== 'number' ||
+        typeof east !== 'number' ||
+        typeof west !== 'number'
+      )
+        return helpConfig;
 
-    const output = argv.output ?? `map_${north}_${west}_${south}_${east}_${zoom}`;
-    return {
-      ...baseConfig,
-      mode: 'map',
-      north,
-      south,
-      west,
-      east,
-      output,
-    };
+      const output = argv.output ?? `map_${north}_${west}_${south}_${east}_${zoom}`;
+      return {
+        ...baseConfig,
+        mode: 'map',
+        north,
+        south,
+        west,
+        east,
+        output,
+      };
+    }
   }
 
   return helpConfig;
 }
 
 function getTileServer(server: string | number, rateLimit: number = 10): TileServer {
-  return {
-    url: ({ x, y, z }) => `${server}/${z}/${x}/${y}.png`,
-    rateLimit: rateLimit ?? 5,
-  };
+  if (typeof server === 'number') {
+    return servers[server - 1];
+  } else {
+    return {
+      url: parseUrl(server),
+      rateLimit,
+    };
+  }
 }

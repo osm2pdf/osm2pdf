@@ -12,7 +12,7 @@ import getConfig from './config';
 import map from './map';
 import route from './route';
 import help from './help';
-import listTileServers from './tile-servers';
+import { listTileServers } from './tile-servers';
 
 (async () => {
   try {

@@ -9,3 +9,7 @@ export async function clearTmp(tmp: string) {
 }
 
 export const getFilename = (tmp: string, i: number) => `${tmp}/${pad(i)}.png`;
+
+export function random<T>(input: Array<T>): T {
+  return input[Math.floor(Math.random() * input.length)];
+}
