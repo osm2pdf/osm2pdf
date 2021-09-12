@@ -13,32 +13,41 @@ import map from './map';
 import route from './route';
 import help from './help';
 import { listTileServers } from './tile-servers';
+import chalk from 'chalk';
 
 (async () => {
+  let config;
   try {
-    const config = getConfig();
+    config = getConfig();
 
     switch (config.mode) {
       case 'tiles': {
-        return listTileServers();
+        listTileServers();
+        return;
       }
       case 'map': {
-        const { zoom, output, pageSizeX, pageSizeY, north, west, south, east, tileServer } = config;
-        return map({ zoom, output, pageSizeX, pageSizeY, north, west, south, east, tileServer });
+        await map(config);
+        return;
       }
       case 'route': {
-        const { zoom, input, output, pageSizeX, pageSizeY, draw, distance, distanceStep, tileServer } = config;
-        return route({ zoom, input, output, pageSizeX, pageSizeY, draw, distance, distanceStep, tileServer });
+        await route(config);
+        return;
       }
       default:
-        return help();
+        help();
+        return;
     }
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.log(JSON.stringify(e));
     // tslint:disable-next-line:no-console
-    console.log(JSON.stringify(e));
-    // tslint:disable-next-line:no-console
     console.error(e);
+    if (config && 'tmp' in config) {
+      console.log(
+        chalk.red(
+          `\n\n************************\n\nError: ${e.message}\n\nYour download failed. You can resume it by adding "--tmp ${config.tmp}" to your command.\n\n************************\n`,
+        ),
+      );
+    }
   }
 })();

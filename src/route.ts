@@ -36,6 +36,7 @@ export default async function path({
   distance,
   distanceStep,
   tileServer,
+  tmp,
 }: {
   zoom: number;
   input: string;
@@ -46,6 +47,7 @@ export default async function path({
   distance: boolean;
   distanceStep: number;
   tileServer: TileServer;
+  tmp: string;
 }) {
   // collect pages:
   //
@@ -59,7 +61,6 @@ export default async function path({
   const pages = collectPages(tileRoute, pageSizeX, pageSizeY);
 
   // download the tiles and connect them to pages
-  const tmp = `tmp${Date.now()}`;
   await downloadPages(pages, tmp, tileServer);
 
   // draw path on pages

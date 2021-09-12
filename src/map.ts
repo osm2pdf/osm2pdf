@@ -15,6 +15,7 @@ export default async function map({
   south,
   east,
   tileServer,
+  tmp,
 }: {
   zoom: number;
   output: string;
@@ -25,11 +26,11 @@ export default async function map({
   south: number;
   east: number;
   tileServer: TileServer;
+  tmp: string;
 }) {
   // collect pages
   const pages: Page[] = boundaries2pages({ north, west, south, east, pageSizeX, pageSizeY, zoom });
   // download pages
-  const tmp = `tmp${Date.now()}`;
   await downloadPages(pages, tmp, tileServer);
   // create pdf
   await createPdf(output, tmp);

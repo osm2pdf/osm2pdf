@@ -16,6 +16,7 @@ interface BaseConfig extends ModeConfig {
   tileServer: TileServer;
   pageSizeX: number;
   pageSizeY: number;
+  tmp: string;
 }
 
 interface MapConfig extends BaseConfig {
@@ -57,12 +58,13 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
   }
 
   if (argv.route || argv.map) {
-    const zoom = argv.zoom ?? 12;
-    const pageSizeX = argv.x ?? 4;
-    const pageSizeY = argv.y ?? 5;
-    const tileServer = getTileServer(argv['tile-server'], argv['rate-limit']);
-
-    const baseConfig = { zoom, pageSizeX, pageSizeY, tileServer };
+    const baseConfig = {
+      zoom: argv.zoom ?? 12,
+      pageSizeX: argv.x ?? 4,
+      pageSizeY: argv.y ?? 5,
+      tileServer: getTileServer(argv['tile-server'], argv['rate-limit']),
+      tmp: argv.tmp ?? `tmp${Date.now()}`,
+    };
 
     if (argv.route) {
       const input = argv.input;
@@ -80,7 +82,7 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
           `route-${input
             .split('.')
             .slice(0, -1)
-            .join('.')}-${zoom}`,
+            .join('.')}-${baseConfig.zoom}`,
       };
     }
 
@@ -98,7 +100,7 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
       )
         return helpConfig;
 
-      const output = argv.output ?? `map_${north}_${west}_${south}_${east}_${zoom}`;
+      const output = argv.output ?? `map_${north}_${west}_${south}_${east}_${baseConfig.zoom}`;
       return {
         ...baseConfig,
         mode: 'map',

@@ -37,7 +37,7 @@ export const rawServers = [
   {
     name: 'OpenTopoMap',
     url: 'https://{a|b|c}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    rateLimit: 1,
+    rateLimit: 2,
   },
   {
     name: 'Stamen Toner Black & White map',

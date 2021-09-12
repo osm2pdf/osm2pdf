@@ -14,6 +14,10 @@ osm2pdf [options]
 --output        name of the generated pdf file (".pdf" will be attached, existing files will be overwritten)
 -x              tiles per page horizontally (default 4)
 -y              tiles per page vertically (default 5)
+--tmp           temporary folder to save downloaded tiles to (default tmp[timestamp])
+                  if the folder doesn't exist, it will be created
+                  you can resume failed download with this option
+                  use carefully! folder will be deleted after successful download
 
 
 === Methods ===
