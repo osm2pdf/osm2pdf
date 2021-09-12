@@ -19,7 +19,7 @@ interface BaseConfig extends ModeConfig {
   tmp: string;
 }
 
-interface MapConfig extends BaseConfig {
+export interface MapConfig extends BaseConfig {
   mode: 'map';
   north: number;
   west: number;

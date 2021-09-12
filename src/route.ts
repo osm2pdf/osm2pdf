@@ -10,7 +10,7 @@ import { Tile, Page, TileServer } from './types';
 import { downloadPages } from './download';
 import { Coordinate, parseRoute } from './parse-route';
 
-const TILE_SIZE = 256;
+export const TILE_SIZE = 256;
 
 interface TileWithDistance extends Tile {
   distance: number;
@@ -74,7 +74,12 @@ export default async function path({
   }
 
   // make pdf from pages
-  await createPdf(output, tmp);
+  const options = {
+    pageSizeX,
+    pageSizeY,
+    links: [],
+  };
+  await createPdf(output, tmp, options);
   await clearTmp(tmp);
 }
 
