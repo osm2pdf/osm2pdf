@@ -1,6 +1,6 @@
 import minimist from 'minimist';
 import { TileServer } from './types';
-import { servers, parseUrl } from './tile-servers';
+import { tileServers, parseUrl } from './tile-servers';
 // TODO json-schema validation of input
 
 // Generic options
@@ -118,7 +118,7 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
 
 function getTileServer(server: string | number, rateLimit: number = 10): TileServer {
   if (typeof server === 'number') {
-    return servers[server - 1];
+    return tileServers[server - 1];
   } else {
     return {
       url: parseUrl(server),

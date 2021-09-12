@@ -1,34 +1,34 @@
 import PDFDocument from 'pdfkit';
 import log from './log';
 import fs from 'fs-extra';
-import path from 'path';
+import { Page } from './types';
+import { TILE_SIZE } from './route';
 
-export interface PDFOptions {
-  pageSizeX: number;
-  pageSizeY: number;
-  links: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    url: string | number;
-  }[][];
+export interface PDFLink {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  url: string | number;
 }
 
-export async function createPdf(output: string, tmp: string, { pageSizeX, pageSizeY, links }: PDFOptions) {
+export async function createPdf(output: string, pages: Page[], links: PDFLink[][]) {
   log('Creating pdf');
-  const files = await fs.readdir(tmp);
   await new Promise<void>((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 0, size: [256 * pageSizeX, 256 * pageSizeY], bufferPages: true });
+    const doc = new PDFDocument({
+      margin: 0,
+      size: [TILE_SIZE * pages[0].sx, TILE_SIZE * pages[0].sy],
+      bufferPages: true,
+    });
     const stream = doc.pipe(fs.createWriteStream(`${output}.pdf`));
     let first = true;
-    for (const file of files) {
+    for (const page of pages) {
       if (!first) {
-        doc.addPage();
+        doc.addPage({ margin: 0, size: [TILE_SIZE * page.sx, TILE_SIZE * page.sy] });
       } else {
         first = !first;
       }
-      doc.image(path.join(tmp, file));
+      doc.image(page.filename);
     }
     for (let i = 0, len = links.length; i < len; ++i) {
       doc.switchToPage(i);
@@ -42,6 +42,5 @@ export async function createPdf(output: string, tmp: string, { pageSizeX, pageSi
     stream.on('finish', resolve);
     stream.on('error', reject);
   });
-  // eslint-disable-next-line: no-console
   log(`Your map was saved to ${output}.pdf\n`);
 }

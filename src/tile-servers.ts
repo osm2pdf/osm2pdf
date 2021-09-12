@@ -76,7 +76,7 @@ export const rawServers = [
   },
 ];
 
-export const servers: TileServer[] = rawServers.map(({ url, rateLimit }) => ({
+export const tileServers: TileServer[] = rawServers.map(({ url, rateLimit }) => ({
   url: parseUrl(url),
   rateLimit,
 }));

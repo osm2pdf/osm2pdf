@@ -16,4 +16,7 @@ export interface PageSize {
   sy: number;
 }
 
-export interface Page extends Tile, PageSize {}
+export interface Page extends Tile, PageSize {
+  filename: string;
+  tileServer: TileServer;
+}

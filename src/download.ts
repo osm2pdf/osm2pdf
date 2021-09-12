@@ -3,19 +3,21 @@ import { getHttp } from './http';
 import fs from 'fs-extra';
 import mergeImg from 'merge-img';
 import log from './log';
-import { getFilename, fileExists } from './utils';
+import { fileExists } from './utils';
 
 // This is the main exported function. Provide pages, folder and server to dowload from and it fills the tmp folder with the pages
-export async function downloadPages(pages: Page[], tmp: string, tileServer: TileServer) {
+export async function downloadPages(pages: Page[], tmp: string) {
   await fs.ensureDir(tmp);
-  const http = getHttp(tileServer.rateLimit);
+  const rateLimit = pages.reduce((_rateLimit, page) => {
+    return Math.min(_rateLimit, page.tileServer.rateLimit);
+  }, Infinity);
+  const http = getHttp(rateLimit);
   for (let i = 0, len = pages.length; i < len; i++) {
-    const filename = getFilename(tmp, i);
-    if (!(await fileExists(filename))) {
-      const page = pages[i];
+    const page = pages[i];
+    if (!(await fileExists(page.filename))) {
       const info = `downloading page ${i + 1}/${pages.length}`;
-      const pageTiles = await getPage(page, { http, tileServer }, info);
-      await savePage(pageTiles, filename);
+      const pageTiles = await getPage(page, { http, tileServer: page.tileServer }, info);
+      await savePage(pageTiles, page.filename);
     }
   }
 }

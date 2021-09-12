@@ -43,6 +43,7 @@ import chalk from 'chalk';
     // tslint:disable-next-line:no-console
     console.error(e);
     if (config && 'tmp' in config) {
+      // tslint:disable-next-line:no-console
       console.log(
         chalk.red(
           `\n\n************************\n\nError: ${e.message}\n\nYour download failed. You can resume it by adding "--tmp ${config.tmp}" to your command.\n\n************************\n`,

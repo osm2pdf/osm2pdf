@@ -58,10 +58,10 @@ export default async function path({
   // convert tile points to pixel points of path
   const drawablePath = getDrawablePath(tileRoute);
   // collect the pages in abstract form
-  const pages = collectPages(tileRoute, pageSizeX, pageSizeY);
+  const pages = collectPages(tileRoute, pageSizeX, pageSizeY, tmp, tileServer);
 
   // download the tiles and connect them to pages
-  await downloadPages(pages, tmp, tileServer);
+  await downloadPages(pages, tmp);
 
   // draw path on pages
   if (draw) {
@@ -74,12 +74,7 @@ export default async function path({
   }
 
   // make pdf from pages
-  const options = {
-    pageSizeX,
-    pageSizeY,
-    links: [],
-  };
-  await createPdf(output, tmp, options);
+  await createPdf(output, pages, []);
   await clearTmp(tmp);
 }
 
@@ -145,7 +140,7 @@ function getDrawablePath(tilePath: Path): DrawablePath {
 }
 
 async function drawPath(page: Page, drawablePath: DrawablePath, distanceStep: number, filename: string) {
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     const control = gm(filename);
 
     // tslint:disable-next-line:no-shadowed-variable
@@ -186,10 +181,11 @@ async function drawPath(page: Page, drawablePath: DrawablePath, distanceStep: nu
   });
 }
 
-function collectPages(tileRoute: Path, sx: number, sy: number): Page[] {
+function collectPages(tileRoute: Path, sx: number, sy: number, tmp: string, tileServer: TileServer): Page[] {
   const pages: Page[] = [];
   const pageDict: { [id: string]: boolean } = {};
 
+  let i = 0;
   for (const tile of tileRoute) {
     const pageX = Math.floor(tile.x / sx) * sx;
     const pageY = Math.floor(tile.y / sy) * sy;
@@ -203,6 +199,8 @@ function collectPages(tileRoute: Path, sx: number, sy: number): Page[] {
         sx,
         sy,
         zoom: tile.zoom,
+        filename: getFilename(tmp, i++),
+        tileServer,
       });
     }
   }
