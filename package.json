@@ -1,6 +1,6 @@
 {
   "name": "osm2pdf",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "description": "Generate pdf from OpenStreetMap tiles",
   "author": "mrkvon <mrkvon@protonmail.com> (https://mrkvon.org)",
   "repository": {
