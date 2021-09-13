@@ -50,6 +50,9 @@ Options:
 -s              latitude of the south boundary (required)
 -e              longitude of the east boundary (required)
 -w              longitude of the west boundary (required)
+--no-content    don't add page with content (optional)
+--no-boundary   don't draw boundary (optional)
+--no-links      don't add links between pages (optional)
 
 Example:
 osm2pdf --map -n=50.1 -s=50 -w=14.9 -e=15 --output=some-name-15 --tile-server=3 --zoom=15

@@ -13,10 +13,10 @@ import path from 'path';
 export default async function map(config: MapConfig) {
   const { output, tmp } = config;
   // collect content
-  const contentPage = getContentPage(config);
+  const contentPage = config.content ? getContentPage(config) : undefined;
 
   const pages: Page[] = boundaries2pages(config);
-  const links = boundaries2links(config, contentPage ? 1 : 0);
+  const links = config.links ? boundaries2links(config, contentPage ? 1 : 0) : [];
 
   if (contentPage) {
     const contentLinks = getContentLinks(contentPage, pages);
@@ -26,8 +26,10 @@ export default async function map(config: MapConfig) {
 
   // download pages
   await downloadPages(pages, tmp);
-  // draw boundary
-  await drawBoundary(pages, config);
+  if (config.boundary) {
+    // draw boundary
+    await drawBoundary(pages, config);
+  }
   // create pdf
   await createPdf(output, pages, links);
   // clean up downloaded pages

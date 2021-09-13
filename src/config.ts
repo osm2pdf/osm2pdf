@@ -25,6 +25,9 @@ export interface MapConfig extends BaseConfig {
   west: number;
   south: number;
   east: number;
+  boundary: boolean;
+  content: boolean;
+  links: boolean;
 }
 
 interface RouteConfig extends BaseConfig {
@@ -101,6 +104,7 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
         return helpConfig;
 
       const output = argv.output ?? `map_${north}_${west}_${south}_${east}_${baseConfig.zoom}`;
+
       return {
         ...baseConfig,
         mode: 'map',
@@ -109,6 +113,9 @@ export default function getConfig(): MapConfig | RouteConfig | HelpConfig | Tile
         west,
         east,
         output,
+        boundary: !!(argv.boundary ?? true),
+        links: !!(argv.links ?? true),
+        content: !!(argv.content ?? true),
       };
     }
   }
