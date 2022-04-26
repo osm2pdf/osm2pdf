@@ -1,5 +1,7 @@
 # OSM map to pdf
 
+[![npm version](https://badge.fury.io/js/osm2pdf.svg)](https://www.npmjs.com/package/osm2pdf)
+
 Generate pdf with [OpenStreetMap](https://openstreetmap.org) tiles.
 
 ![example output of osm2pdf with --route parameter](https://git.mrkvon.org/mrkvon/osm2pdf/raw/branch/master/example.png)
