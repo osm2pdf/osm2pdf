@@ -3,7 +3,7 @@ import { getHttp } from './http';
 import fs from 'fs-extra';
 import mergeImg from 'merge-img';
 import log from './log';
-import { fileExists } from './utils';
+import { fileExists, wait } from './utils';
 
 // This is the main exported function. Provide pages, folder and server to dowload from and it fills the tmp folder with the pages
 export async function downloadPages(pages: Page[], tmp: string) {
@@ -40,6 +40,17 @@ async function getTile(
   );
 }
 
+const retry = <T extends unknown[], U>(f: (...props: T) => U, n: number, i = 0) => async(...props: T): Promise<U> => {
+    try {
+      return await f(...props)
+    }
+    catch (e) {
+      if (i >= n) throw e
+      await wait(1000)
+      return await retry(f, n, i + 1)(...props)
+    }
+}
+
 async function getPage(
   { x, y, sx, sy, zoom }: Page,
   { http, tileServer }: { http: any; tileServer: TileServer },
@@ -52,7 +63,7 @@ async function getPage(
     const row: Promise<Buffer>[] = [];
     for (let j = 0; j < sy; j++) {
       row.push(
-        getTile({ x: x + i, y: y + j, zoom }, { http, tileServer }).then(tile => {
+        retry(getTile, 10)({ x: x + i, y: y + j, zoom }, { http, tileServer }).then(tile => {
           log(info, `[${'.'.repeat(++progress)}${' '.repeat(sx * sy - progress)}]`);
           return tile;
         }),
