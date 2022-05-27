@@ -7,7 +7,10 @@ import { fileExists } from './utils';
 
 // This is the main exported function. Provide pages, folder and server to dowload from and it fills the tmp folder with the pages
 export async function downloadPages(pages: Page[], tmp: string) {
-  await fs.ensureDir(tmp);
+  await /* TODO: JSFIX could not patch the breaking change:
+  Creating a directory with fs-extra no longer returns the path 
+  Suggested fix: The returned promise no longer includes the path of the new directory */
+  fs.ensureDir(tmp);
   const rateLimit = pages.reduce((_rateLimit, page) => {
     return Math.min(_rateLimit, page.tileServer.rateLimit);
   }, Infinity);
