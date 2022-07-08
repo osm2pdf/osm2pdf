@@ -1,3 +1,7 @@
+## 3.1.0 (July 8, 2022)
+
+* Feature: Handle network errors - it's not necessary to rerun so often
+
 ## 3.0.0 (September 13, 2021)
 
 ### Tile servers
