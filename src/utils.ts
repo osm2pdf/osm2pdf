@@ -15,7 +15,7 @@ export function random<T>(input: T[]): T {
   return input[Math.floor(Math.random() * input.length)];
 }
 
-export const wait = (n: number) => new Promise(resolve => setTimeout(resolve, n))
+export const wait = (n: number) => new Promise(resolve => setTimeout(resolve, n));
 
 export const fileExists = async (file: string): Promise<boolean> => {
   try {

@@ -40,16 +40,15 @@ async function getTile(
   );
 }
 
-const retry = <T extends unknown[], U>(f: (...props: T) => U, n: number, i = 0) => async(...props: T): Promise<U> => {
-    try {
-      return await f(...props)
-    }
-    catch (e) {
-      if (i >= n) throw e
-      await wait(1000)
-      return await retry(f, n, i + 1)(...props)
-    }
-}
+const retry = <T extends unknown[], U>(f: (...props: T) => U, n: number, i = 0) => async (...props: T): Promise<U> => {
+  try {
+    return await f(...props);
+  } catch (e) {
+    if (i >= n) throw e;
+    await wait(1000);
+    return await retry(f, n, i + 1)(...props);
+  }
+};
 
 async function getPage(
   { x, y, sx, sy, zoom }: Page,
