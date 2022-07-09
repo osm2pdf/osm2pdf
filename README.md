@@ -36,7 +36,7 @@ osm2pdf --route --zoom=10 --input=path/to/route.gpx --output=path/to/output --ti
 You need to provide GPS boundaries of the area you want to download.
 
 ```bash
-osm2pdf -n=70.923 -w=-4.373 -s=55.756 -e=27.872 --zoom=9 --output=path/to/output --tile-server=2
+osm2pdf --map -n=70.923 -w=-4.373 -s=55.756 -e=27.872 --zoom=9 --output=path/to/output --tile-server=2
 ```
 
 ### Show available tile servers
