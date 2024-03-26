@@ -4,7 +4,7 @@
 
 Generate pdf with [OpenStreetMap](https://openstreetmap.org) tiles.
 
-![example output of osm2pdf with --route parameter](https://git.mrkvon.org/mrkvon/osm2pdf/raw/branch/master/example.png)
+![example output of osm2pdf with --route parameter](https://raw.githubusercontent.com/osm2pdf/osm2pdf/main/example.png)
 
 <!--
 ## Video
